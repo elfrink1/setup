@@ -12,6 +12,9 @@ uv init "$PROJECT_NAME"
 # Navigate to the project directory
 cd "$PROJECT_NAME"
 
+# install ruff into the venv
+uv tool install ruff@latest
+
 # Initialize Git repository
 git init
 
