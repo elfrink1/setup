@@ -12,9 +12,6 @@ uv init "$PROJECT_NAME"
 # Navigate to the project directory
 cd "$PROJECT_NAME"
 
-# install ruff into the venv
-uv add --dev ruff@latest
-
 # Add a GitHub Action to install and run ruff
 mkdir -p .github/workflows
 cat > .github/workflows/ruff.yml <<EOL
