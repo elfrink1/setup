@@ -12,6 +12,8 @@ uv init "$PROJECT_NAME"
 # Navigate to the project directory
 cd "$PROJECT_NAME"
 
+echo "Created Folder"
+
 # Add a GitHub Action to install and run ruff
 mkdir -p .github/workflows
 cat > .github/workflows/ruff.yml <<EOL
@@ -19,11 +21,11 @@ name: Ruff
 on: [ push, pull_request ]
 
 jobs:
-  ruff:
-	runs-on: ubuntu-latest 
-    steps:
-        - uses: actions/checkout@v4
-        - uses: astral-sh/ruff-action@v3
+    ruff:
+        runs-on: ubuntu-latest 
+        steps:
+            - uses: actions/checkout@v4
+            - uses: astral-sh/ruff-action@v3
 EOL
 
 # Initialize Git repository
