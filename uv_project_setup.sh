@@ -3,6 +3,22 @@
 # Exit on error
 set -e
 
+# Check if UV is installed
+if ! command -v uv &> /dev/null
+then
+    echo "UV could not be found. Please install UV first."
+    exit
+fi
+# Check if GitHub CLI is installed
+if ! command -v gh &> /dev/null
+then
+    echo "GitHub CLI could not be found. Please install GitHub CLI first."
+    exit
+fi
+
+cd /home/$USER
+
+
 # Prompt for project name
 read -p "Enter the UV project name: " PROJECT_NAME
 
@@ -11,10 +27,27 @@ uv init "$PROJECT_NAME"
 
 # Navigate to the project directory
 cd "$PROJECT_NAME"
-
 echo "Created Folder"
 
-# Add a GitHub Action to install and run ruff
+# Install pre-commit into project
+uv sync
+uv pip install pre-commit
+pre-commit install
+mkdir -p .git/hooks
+cat > .git/hooks/pre-commit-config.yaml <<EOL
+repos:
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  # Ruff version.
+  rev: v0.11.5
+  hooks:
+    # Run the linter.
+    - id: ruff
+      args: [ --fix ]
+    # Run the formatter.
+    - id: ruff-format
+EOL
+
+# Add a GitHub Action to install and run ruff on push and pull request
 mkdir -p .github/workflows
 cat > .github/workflows/ruff.yml <<EOL
 name: Ruff
@@ -26,6 +59,8 @@ jobs:
         steps:
             - uses: actions/checkout@v4
             - uses: astral-sh/ruff-action@v3
+            - run: ruff check
+            - run: ruff format --check
 EOL
 
 # Initialize Git repository
@@ -34,6 +69,8 @@ git init
 # Add files to Git
 git add .
 git commit -m "Initial commit for $PROJECT_NAME"
+
+echo "Created local repository"
 
 # Retrieve GitHub username
 USER_NAME=$(git config user.name)
