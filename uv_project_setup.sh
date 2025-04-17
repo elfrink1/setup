@@ -32,9 +32,8 @@ echo "Created Folder"
 # Install pre-commit into project
 uv sync
 uv pip install pre-commit
-pre-commit install
-mkdir -p .git/hooks
-cat > .git/hooks/pre-commit-config.yaml <<EOL
+
+cat > ./pre-commit-config.yaml <<EOL
 repos:
 - repo: https://github.com/astral-sh/ruff-pre-commit
   # Ruff version.
@@ -46,6 +45,8 @@ repos:
     # Run the formatter.
     - id: ruff-format
 EOL
+
+uvx pre-commit install
 
 # Add a GitHub Action to install and run ruff on push and pull request
 mkdir -p .github/workflows
