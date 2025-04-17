@@ -9,6 +9,7 @@ then
     echo "UV could not be found. Please install UV first."
     exit
 fi
+
 # Check if GitHub CLI is installed
 if ! command -v gh &> /dev/null
 then
@@ -16,16 +17,12 @@ then
     exit
 fi
 
-cd /home/$USER
-
-
 # Prompt for project name
 read -p "Enter the UV project name: " PROJECT_NAME
 
 # Use the UV Python tool to initialize the project
+cd /home/$USER
 uv init "$PROJECT_NAME"
-
-# Navigate to the project directory
 cd "$PROJECT_NAME"
 echo "Created Folder"
 
@@ -41,7 +38,7 @@ repos:
   hooks:
     # Run the linter.
     - id: ruff
-      args: [ --fix ]
+      args: ["check", "--select", "I", "--fix"]
     # Run the formatter.
     - id: ruff-format
 EOL
