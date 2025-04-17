@@ -17,6 +17,33 @@ then
     exit
 fi
 
+# Prompt for project folder
+read -p "Enter the path to the project folder (default is /home/$USER): " PROJECT_FOLDER
+
+# Set default folder if none is provided
+if [ -z "$PROJECT_FOLDER" ]; then
+  PROJECT_FOLDER="/home/$USER"
+else
+  PROJECT_FOLDER="/home/$USER/$PROJECT_FOLDER"
+fi
+
+# Create the project folder if it does not exist
+while [ ! -d "$PROJECT_FOLDER" ]; do
+  read -p "The specified folder does not exist. Would you like to create it? (yes/no) [yes]: " CREATE_FOLDER
+  CREATE_FOLDER=${CREATE_FOLDER:-yes}
+  if [[ "$CREATE_FOLDER" == "yes" ]]; then
+    echo "Creating the folder..."
+    mkdir -p "$PROJECT_FOLDER"
+  else
+    read -p "Enter a new path to the project folder (default is /home/$USER): " PROJECT_FOLDER
+    if [ -z "$PROJECT_FOLDER" ]; then
+      PROJECT_FOLDER="/home/$USER"
+    else
+      PROJECT_FOLDER="/home/$USER/$PROJECT_FOLDER"
+    fi
+  fi
+done
+
 # Prompt for project name
 read -p "Enter the UV project name: " PROJECT_NAME
 
