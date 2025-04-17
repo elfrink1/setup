@@ -33,7 +33,7 @@ echo "Created Folder"
 uv sync
 uv pip install pre-commit
 
-cat > ./pre-commit-config.yaml <<EOL
+cat > ./.pre-commit-config.yaml <<EOL
 repos:
 - repo: https://github.com/astral-sh/ruff-pre-commit
   # Ruff version.
