@@ -18,11 +18,11 @@ then
 fi
 
 # Prompt for project folder
-read -p "Enter the path to the project folder (default is /home/$USER): " PROJECT_FOLDER
+read -p "Enter the path to your projects folder from /home/$USER/ (default is "projects"): " PROJECT_FOLDER
 
 # Set default folder if none is provided
 if [ -z "$PROJECT_FOLDER" ]; then
-  PROJECT_FOLDER="/home/$USER"
+  PROJECT_FOLDER="/home/$USER/projects"
 else
   PROJECT_FOLDER="/home/$USER/$PROJECT_FOLDER"
 fi
@@ -45,13 +45,19 @@ while [ ! -d "$PROJECT_FOLDER" ]; do
 done
 
 # Prompt for project name
-read -p "Enter the UV project name: " PROJECT_NAME
+while true; do
+  read -p "Enter the UV project name: " PROJECT_NAME
+  if gh repo view "$PROJECT_NAME" &> /dev/null; then
+    echo "A repository with the name '$PROJECT_NAME' already exists on GitHub. Please choose a different name."
+  else
+    break
+  fi
+done
 
 # Use the UV Python tool to initialize the project
-cd /home/$USER
+cd $PROJECT_FOLDER
 uv init "$PROJECT_NAME"
 cd "$PROJECT_NAME"
-echo "Created Folder"
 
 # Install pre-commit into project
 uv sync
